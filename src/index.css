@@ -1,0 +1,135 @@
+@import "tailwindcss";
+
+@theme {
+  /* ───────── Brand · Electric Petronas teal (PRIMARY UI accent) ─────────
+     Note: the token name `petronas` is historical and intentionally kept to
+     avoid renaming ~50 references. The value is now the ELECTRIC teal that is
+     the single accent of the editorial-olive theme — high-chroma, used
+     sparingly against deep olive + warm sage-cream ink (the "Lando" recipe).
+     This also reunites the UI accent with the car's real Petronas livery. */
+  --color-petronas: #26d6c5;
+  --color-petronas-soft: #5fe6d8;
+  --color-petronas-deep: #159b8d;
+  --color-petronas-glow: #4af0df;
+
+  /* ───────── Surfaces · deep editorial olive ─────────
+     This is the page + scroll-section base; the hero is the lone exception. */
+  --color-mercedes-jet: #1a1f17;       /* deepest bg (page + sections) */
+  --color-mercedes-black: #222a1e;     /* elevated bg (cards / nav blur) */
+
+  /* ───────── Hero · warm cream studio backdrop ─────────
+     Light seamless behind the interactive car so the dark W13 pops. Hero text
+     flips to dark ink (mercedes-jet) for contrast; everything below stays olive. */
+  --color-cream: #eceae2;
+  --color-cream-deep: #ddd9cc;         /* subtle floor / gradient toe */
+
+  /* ───────── Ink · warm sage-cream (high-contrast, intentionally WARM) ─────────
+     The old silvers were cool blue-greys that read thin/cheap. These are
+     warm and heavier-feeling — the single biggest "premium" lever after type. */
+  --color-mercedes-silver: #e7e8dd;       /* primary ink — sage cream */
+  --color-mercedes-silver-dark: #9ba291;  /* muted — warm sage grey */
+
+  /* ───────── Warm metallic · companion accent (retained, now rarely used) ───────── */
+  --color-champagne: #d4b67a;
+  --color-champagne-soft: #e3cb96;
+  --color-champagne-deep: #8a6e3a;
+
+  /* ───────── Deep teal · scene HUD (steering wheel LEDs, race-start hold
+     pill). Now in the same family as the primary accent for cohesion. ───────── */
+  --color-teal: #14a89b;
+  --color-teal-glow: #26d6c5;
+
+  /* ───────── Alert · slightly muted racing red ───────── */
+  --color-race-red: #d4291f;
+  --color-race-red-glow: #e85048;
+
+  /* ───────── Type system · editorial pairing ─────────
+     display  = Archivo  (heavy grotesque — headings, race numbers)
+     serif    = Fraunces (high-contrast editorial serif — emphasis words)
+     body     = Inter    (clean body copy)
+     mono     = JetBrains Mono (telemetry / eyebrow labels) */
+  --font-display: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Fraunces", "Times New Roman", Georgia, serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", monospace;
+  --font-numeric: "Archivo", "Inter", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--color-mercedes-jet);
+  color: var(--color-mercedes-silver);
+  font-family: var(--font-body);          /* body copy rides Inter */
+  font-feature-settings: "ss01", "cv11";  /* Inter stylistic tweaks for premium feel */
+  font-optical-sizing: auto;              /* let Fraunces/Archivo size their contrast */
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Fraunces emphasis — the editorial "WINS / LEGACY" move. Optical sizing is
+   left on `auto` so large display words get the high-contrast (thin-hairline)
+   cut that reads expensive, while staying legible at smaller sizes. */
+.font-serif {
+  font-optical-sizing: auto;
+  letter-spacing: -0.015em;
+}
+
+/* Numerals (race numbers, sector boards, stats) — Russo One carried its own
+   heavy weight; Archivo needs it dialled up + tabular figures to keep that
+   solid "timing-screen" read. */
+.font-numeric {
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  font-feature-settings: "tnum";
+}
+
+body {
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-petronas);
+  color: var(--color-mercedes-jet);
+}
+
+/* Subtle, refined scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(138, 146, 156, 0.25);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-petronas-deep);
+}
+
+/* Subtle film-grain overlay — adds the "premium print" tactile feel */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.035;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
