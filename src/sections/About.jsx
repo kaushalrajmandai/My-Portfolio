@@ -24,7 +24,7 @@ export default function About() {
   return (
     <section
       id="about"
-      className="relative min-h-screen flex items-center justify-center px-6 md:px-12 py-32"
+      className="relative z-20 -mt-[100vh] min-h-screen bg-mercedes-jet flex items-start justify-center px-6 md:px-12 pt-24 pb-32"
     >
       <div className="w-full max-w-3xl mx-auto">
         <SectionHeader number="01" eyebrow="Driver Profile" title="About Me" />

@@ -42,8 +42,9 @@ const LAUNCH_CAM = { position: [1.28, 5, 2.18], target: [0, 0.42, 0] };
 const LAUNCH_POS = new THREE.Vector3(...LAUNCH_CAM.position);
 const LAUNCH_TGT = new THREE.Vector3(...LAUNCH_CAM.target);
 
-// Phase-2 forward drive distance (world +Z). Flip the sign to reverse, raise
-// the magnitude for a longer drive. No scaling — the car keeps its size.
+// Phase-2 forward drive distance (world +Z). The car drives forward as About
+// wipes up over it — so it drives off behind the section. Raise for a longer
+// drive, flip the sign to reverse.
 const FWD_DIST = 6;
 
 const SPIN_DELAY_MS = 1200;
@@ -54,13 +55,14 @@ const smooth = (a, b, p) => {
   return t * t * (3 - 2 * t);
 };
 
-function CarRig({ progressRef, spin, settleFraction }) {
+function CarRig({ progressRef, spin, settleFraction, dragging }) {
   const ref = useRef();
   const camera = useThree((s) => s.camera);
   const controls = useThree((s) => s.controls);
   const fromPos = useMemo(() => new THREE.Vector3(), []);
   const fromTgt = useMemo(() => new THREE.Vector3(), []);
   const snapped = useRef(false);
+  const homed = useRef(true); // camera begins at START on load
 
   useFrame((_, delta) => {
     const g = ref.current;
@@ -72,18 +74,37 @@ function CarRig({ progressRef, spin, settleFraction }) {
     const scrolling = p > 0.001;
 
     if (controls) {
-      controls.autoRotate = !scrolling && spin; // idle spin stops on scroll
+      // Idle auto-spin only once the camera has settled back at START — so the
+      // home-ease below isn't fought by autoRotate — and never while dragging.
+      controls.autoRotate = !scrolling && spin && homed.current && !dragging;
       controls.enabled = !scrolling; // lock drag during the exit
     }
 
     if (!scrolling) {
-      // idle — ease the car back to the origin (in case we scrolled back up)
+      // idle — ease the car body back to the origin
       snapped.current = false;
       g.position.x += (0 - g.position.x) * k;
       g.position.y += (0 - g.position.y) * k;
       g.position.z += (0 - g.position.z) * k;
+
+      // After a scroll exit the camera is left in the launch framing. Ease it
+      // back to the default START pose so the hero fully resets when the user
+      // scrolls back up. Skip while dragging so "drag to rotate" stays free.
+      if (controls && !homed.current) {
+        if (dragging) {
+          homed.current = true; // user took over — stop auto-homing
+        } else {
+          camera.position.lerp(START_POS, k);
+          controls.target.lerp(START_TGT, k);
+          controls.update();
+          if (camera.position.distanceTo(START_POS) < 0.02) homed.current = true;
+        }
+      }
       return;
     }
+
+    // scrolling → the next idle should re-home the camera to START
+    homed.current = false;
 
     // snapshot where the camera was the instant scrolling began, so the revolve
     // starts from there no matter where the idle spin/drag left it
@@ -164,6 +185,7 @@ export default function HeroCar({
             progressRef={progressRef}
             spin={spin && !POSE_CAPTURE}
             settleFraction={settleFraction}
+            dragging={dragging}
           />
 
           <ContactShadows

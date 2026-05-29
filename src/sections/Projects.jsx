@@ -67,11 +67,11 @@ export default function Projects() {
     clamp: true,
   });
 
-  // Car faces the way you're scrolling: right on the way down, left on the way up.
+  // Car faces against the scroll: left on the way down, right on the way up.
   useEffect(() => {
     const unsub = smoothVel.on("change", (v) => {
-      if (v > 0.0005) setFacingRight(true);
-      else if (v < -0.0005) setFacingRight(false);
+      if (v > 0.0005) setFacingRight(false);
+      else if (v < -0.0005) setFacingRight(true);
     });
     return () => unsub();
   }, [smoothVel]);
@@ -125,14 +125,27 @@ export default function Projects() {
           ))}
         </motion.div>
 
-        {/* Driving car (real W13 GLB) */}
-        <motion.div style={{ x: carX }} className="absolute bottom-10 left-0 z-10">
-          <DrivingCar3D active={inView} facingRight={facingRight} />
+        {/* The track — a single fine line the car runs along. Faded ends keep it
+            premium (no hard edges); appears/disappears with the car. */}
+        <motion.div
+          aria-hidden="true"
+          animate={{ opacity: inView ? 1 : 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="pointer-events-none absolute inset-x-0 bottom-[2.75rem] z-0"
+        >
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-mercedes-silver-dark/40 to-transparent" />
+          <div className="h-4 w-full bg-gradient-to-b from-mercedes-silver-dark/[0.06] to-transparent blur-[2px]" />
         </motion.div>
 
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 font-mono text-[10px] tracking-[0.4em] uppercase text-mercedes-silver-dark/70">
-          Scroll → through the garage
-        </div>
+        {/* Driving car (real W13 GLB) — with a soft contact shadow grounding it
+            on the track as it moves. */}
+        <motion.div style={{ x: carX }} className="absolute bottom-10 left-0 z-10">
+          <div className="relative">
+            <DrivingCar3D active={inView} facingRight={facingRight} />
+            <div className="pointer-events-none absolute bottom-[3px] left-1/2 h-[6px] w-28 -translate-x-1/2 rounded-[50%] bg-black/40 blur-md" />
+          </div>
+        </motion.div>
+
       </div>
     </section>
   );
