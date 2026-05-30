@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
   Environment,
@@ -144,6 +144,16 @@ export default function HeroCar({
   const [dragging, setDragging] = useState(false);
   const [captured, setCaptured] = useState(null);
   const [spin, setSpin] = useState(false);
+  const [mobileRotate, setMobileRotate] = useState(false);
+  const isMobile = typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
+
+  // Auto-disable rotate mode after 5s of inactivity on mobile.
+  const rotateTimer = useRef(null);
+  const enableMobileRotate = useCallback(() => {
+    setMobileRotate(true);
+    clearTimeout(rotateTimer.current);
+    rotateTimer.current = setTimeout(() => setMobileRotate(false), 5000);
+  }, []);
 
   // Start the idle spin a short beat after the lights sequence reveals the site.
   useEffect(() => {
@@ -151,6 +161,9 @@ export default function HeroCar({
     const id = setTimeout(() => setSpin(true), SPIN_DELAY_MS);
     return () => clearTimeout(id);
   }, [revealed]);
+
+  // On mobile, canvas is pointer-events-none unless rotate mode is active.
+  const canvasPointerEvents = isMobile ? (mobileRotate ? "auto" : "none") : "auto";
 
   return (
     <div className="relative h-full w-full" style={{ touchAction: "pan-y" }}>
@@ -162,7 +175,7 @@ export default function HeroCar({
         camera={{ position: START.position, fov: 38 }}
         onPointerDown={() => setDragging(true)}
         onPointerUp={() => setDragging(false)}
-        style={{ cursor: dragging ? "grabbing" : "grab", touchAction: "pan-y" }}
+        style={{ cursor: dragging ? "grabbing" : "grab", touchAction: "pan-y", pointerEvents: canvasPointerEvents }}
       >
         {/* Soft studio key/fill/rim for a dark car on a light backdrop */}
         <ambientLight intensity={0.55} />
@@ -275,6 +288,18 @@ export default function HeroCar({
           <div>position: [{(captured?.position ?? START.position).join(", ")}]</div>
           <div>target: [{(captured?.target ?? START.target).join(", ")}]</div>
         </div>
+      )}
+
+      {/* Mobile-only rotate toggle — tap to enable car rotation for 5s */}
+      {isMobile && (
+        <button
+          onTouchStart={(e) => { e.stopPropagation(); enableMobileRotate(); }}
+          onClick={enableMobileRotate}
+          className="md:hidden absolute top-4 right-4 z-30 flex items-center gap-1.5 rounded-full border border-mercedes-jet/20 bg-cream/70 px-3 py-1.5 font-mono text-[9px] tracking-[0.25em] uppercase text-mercedes-jet/60 backdrop-blur-sm transition-colors"
+          style={{ pointerEvents: "auto", touchAction: "manipulation" }}
+        >
+          {mobileRotate ? "↻ Rotating…" : "↻ Rotate car"}
+        </button>
       )}
     </div>
   );
