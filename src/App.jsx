@@ -6,6 +6,7 @@ import About from "./sections/About";
 import Skills from "./sections/Skills";
 import Experience from "./sections/Experience";
 import Projects from "./sections/Projects";
+import GithubActivity from "./sections/GithubActivity";
 import Contact from "./sections/Contact";
 
 export default function App() {
@@ -35,6 +36,7 @@ export default function App() {
             <Skills />
             <Experience />
             <Projects />
+            <GithubActivity />
             <Contact />
           </main>
         </div>

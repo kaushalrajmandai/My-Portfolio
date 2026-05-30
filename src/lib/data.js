@@ -52,7 +52,21 @@ export const education = [
     org: "ITM Skills University, Kharghar",
     period: "2025 — Present",
     detail:
-      "First-year B.Tech CSE. Focus areas: React, DSA in C++, frontend engineering, and 3D web (Three.js / WebGL).",
+      "First-year B.Tech CSE. CGPA: 8.52. Focus areas: React, DSA in C++, frontend engineering, and 3D web (Three.js / WebGL).",
+  },
+  {
+    title: "HSC · Science (12th Standard)",
+    org: "S S High School & Junior College, Seawoods",
+    period: "Feb 2025",
+    detail:
+      "Maharashtra State Board (Mumbai Division). Stream: Science. Passed.",
+  },
+  {
+    title: "SSC (10th Standard)",
+    org: "Holy Rose English School, Titwala",
+    period: "Mar 2023",
+    detail:
+      "Maharashtra State Board. 89.60% — 448 / 500. Science & Technology: 95 · Mathematics: 91 · Marathi: 91.",
   },
 ];
 
@@ -67,9 +81,16 @@ export const experience = [
   {
     title: "Member · Research & Development Club",
     org: "ITM Skills University, School of Future Tech",
-    period: "2025 — Present",
+    period: "Sept 2024 — May 2025",
     detail:
       "Automated the club's certificate-distribution workflow with a Python + SMTP pipeline — replaced a tedious manual task with a one-click run that sends personalised certificates to 47 recipients.",
+  },
+  {
+    title: "Attendee · Practical Workshop on Research Methodology & Data Science Applications",
+    org: "ITM Skills University, School of Future Tech · R&D Club",
+    period: "Feb 2026",
+    detail:
+      "Completed a hands-on workshop on research methodology and data science applications, earning a Certificate of Excellence.",
   },
   {
     title: "Participant · Summer Hacks 2026",
@@ -96,7 +117,7 @@ export const projects = [
       "Experimental WebGL gym website with cursor-driven image-reveal effects. The project that got me obsessed with 3D web.",
     tech: ["Three.js", "WebGL", "JavaScript", "GLSL"],
     github: "https://github.com/kaushalrajmandai/strive-fitness",
-    live: "",
+    live: "https://kaushalrajmandai.github.io/strive-fitness/",
     featured: true,
   },
   {
@@ -145,6 +166,7 @@ export const navSections = [
   { id: "skills", label: "Telemetry" },
   { id: "experience", label: "Race History" },
   { id: "projects", label: "Garage" },
+  { id: "activity", label: "Data Log" },
   { id: "contact", label: "Paddock" },
 ];
 

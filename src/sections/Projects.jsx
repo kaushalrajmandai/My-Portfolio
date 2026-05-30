@@ -177,6 +177,15 @@ function ProjectCardH({ project, index, count, progress }) {
       style={{ scale, opacity }}
       className="group relative shrink-0 w-[82vw] sm:w-[440px] md:w-[480px] h-[300px] overflow-hidden rounded-xl border border-mercedes-silver-dark/15 bg-mercedes-black"
     >
+      {project.live && (
+        <a
+          href={project.live}
+          target="_blank"
+          rel="noreferrer"
+          aria-label={`Visit ${project.name}`}
+          className="absolute inset-0 z-[1]"
+        />
+      )}
       {img ? (
         <img
           src={img}
@@ -213,7 +222,7 @@ function ProjectCardH({ project, index, count, progress }) {
               </span>
             ))}
           </div>
-          <div className="flex gap-2 shrink-0">
+          <div className="flex gap-2 shrink-0 relative z-[2]">
             {project.github && (
               <IconLink href={project.github} label="GitHub">
                 <GitHubIcon />
