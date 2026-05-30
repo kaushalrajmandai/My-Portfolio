@@ -153,7 +153,7 @@ export default function HeroCar({
   }, [revealed]);
 
   return (
-    <div className="relative h-full w-full">
+    <div className="relative h-full w-full" style={{ touchAction: "pan-y" }}>
       <Canvas
         shadows
         dpr={[1, 2]}
@@ -162,7 +162,7 @@ export default function HeroCar({
         camera={{ position: START.position, fov: 38 }}
         onPointerDown={() => setDragging(true)}
         onPointerUp={() => setDragging(false)}
-        style={{ cursor: dragging ? "grabbing" : "grab" }}
+        style={{ cursor: dragging ? "grabbing" : "grab", touchAction: "pan-y" }}
       >
         {/* Soft studio key/fill/rim for a dark car on a light backdrop */}
         <ambientLight intensity={0.55} />
@@ -240,7 +240,7 @@ export default function HeroCar({
           autoRotate={false}
           autoRotateSpeed={0.72}
           enableDamping={false}
-          touches={{ ONE: 0, TWO: 0 }}
+          touches={{ ONE: undefined, TWO: undefined }}
           minPolarAngle={Math.PI * 0.16}
           maxPolarAngle={Math.PI * 0.52}
           target={START.target}
