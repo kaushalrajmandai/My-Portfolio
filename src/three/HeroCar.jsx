@@ -145,7 +145,7 @@ export default function HeroCar({
   const [captured, setCaptured] = useState(null);
   const [spin, setSpin] = useState(false);
   const [mobileRotate, setMobileRotate] = useState(false);
-  const isMobile = typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches;
+  const isMobile = useMemo(() => typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches, []);
 
   // Auto-disable rotate mode after 5s of inactivity on mobile.
   const rotateTimer = useRef(null);
@@ -253,7 +253,7 @@ export default function HeroCar({
           autoRotate={false}
           autoRotateSpeed={0.72}
           enableDamping={false}
-          touches={{ ONE: undefined, TWO: undefined }}
+          touches={isMobile && !mobileRotate ? { ONE: undefined, TWO: undefined } : undefined}
           minPolarAngle={Math.PI * 0.16}
           maxPolarAngle={Math.PI * 0.52}
           target={START.target}
