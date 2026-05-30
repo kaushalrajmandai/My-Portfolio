@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import { Text } from "@react-three/drei";
 import { profile } from "../lib/data";
@@ -8,8 +8,16 @@ import { profile } from "../lib/data";
  * /public/models/f1-car.glb is missing or fails to load. See F1Car.jsx for
  * the GLB-first wrapper.
  */
-export default function F1CarProcedural() {
+export default function F1CarProcedural({ onLoaded }) {
   const group = useRef(null);
+
+  const notified = useRef(false);
+  useEffect(() => {
+    if (!notified.current) {
+      notified.current = true;
+      onLoaded?.();
+    }
+  }, [onLoaded]);
 
   // Very subtle idle hover so the car never feels frozen
   useFrame((state) => {

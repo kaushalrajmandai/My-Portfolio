@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import RaceStartLoader from "./components/RaceStartLoader";
 import Navbar from "./components/Navbar";
 import Home from "./sections/Home";
@@ -11,10 +11,19 @@ import Contact from "./sections/Contact";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
+  const [modelReady, setModelReady] = useState(false);
+
+  // Timeout fallback: show the site after 8s even if the model never signals.
+  useEffect(() => {
+    const t = setTimeout(() => setModelReady(true), 8000);
+    return () => clearTimeout(t);
+  }, []);
+
+  const handleModelLoaded = useCallback(() => setModelReady(true), []);
 
   return (
     <>
-      {loading && <RaceStartLoader onComplete={() => setLoading(false)} />}
+      {loading && <RaceStartLoader ready={modelReady} onComplete={() => setLoading(false)} />}
 
       <div
         className={`transition-opacity duration-1000 ${
@@ -31,7 +40,7 @@ export default function App() {
         <div className="relative z-10">
           <Navbar />
           <main>
-            <Home revealed={!loading} />
+            <Home revealed={!loading} onModelLoaded={handleModelLoaded} />
             <About />
             <Skills />
             <Experience />

@@ -19,7 +19,7 @@ const HERO_VH = 250; // total scroll length of the hero, in vh
 // so there's a brief hold on the fully-settled pose before the page moves.
 const SETTLE_FRACTION = 0.28; // share of that scroll spent revolving into pose
 
-export default function Home({ revealed = true }) {
+export default function Home({ revealed = true, onModelLoaded }) {
   const ref = useRef(null);
   const progressRef = useRef(0);
   const [inView, setInView] = useState(true);
@@ -112,6 +112,7 @@ export default function Home({ revealed = true }) {
             progressRef={progressRef}
             revealed={revealed}
             settleFraction={SETTLE_FRACTION}
+            onModelLoaded={onModelLoaded}
           />
         </div>
 

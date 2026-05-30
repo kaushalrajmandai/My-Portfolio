@@ -8,21 +8,29 @@ import { motion } from "framer-motion";
 const BG   = "#0e120c";
 const TEAL = "#26D6C5";
 
-export default function RaceStartLoader({ onComplete }) {
+export default function RaceStartLoader({ ready = false, onComplete }) {
   const [exiting, setExiting] = useState(false);
+  const [minElapsed, setMinElapsed] = useState(false);
 
   const done = useRef(onComplete);
   useEffect(() => { done.current = onComplete; }, [onComplete]);
 
+  // Minimum display so the loader never flashes away instantly.
   useEffect(() => {
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    const HOLD = reduce ? 600 : 2200;
-    const OUT  = reduce ? 400 : 750;
-    const t = [];
-    t.push(setTimeout(() => setExiting(true), HOLD));
-    t.push(setTimeout(() => done.current?.(), HOLD + OUT));
-    return () => t.forEach(clearTimeout);
+    const t = setTimeout(() => setMinElapsed(true), reduce ? 300 : 800);
+    return () => clearTimeout(t);
   }, []);
+
+  // Start the exit animation once the model is ready AND min time has passed.
+  useEffect(() => {
+    if (!ready || !minElapsed) return;
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    const OUT = reduce ? 400 : 750;
+    setExiting(true);
+    const t = setTimeout(() => done.current?.(), OUT);
+    return () => clearTimeout(t);
+  }, [ready, minElapsed]);
 
   return (
     <motion.div

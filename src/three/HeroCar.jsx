@@ -55,7 +55,7 @@ const smooth = (a, b, p) => {
   return t * t * (3 - 2 * t);
 };
 
-function CarRig({ progressRef, spin, settleFraction, dragging }) {
+function CarRig({ progressRef, spin, settleFraction, dragging, onModelLoaded }) {
   const ref = useRef();
   const camera = useThree((s) => s.camera);
   const controls = useThree((s) => s.controls);
@@ -130,7 +130,7 @@ function CarRig({ progressRef, spin, settleFraction, dragging }) {
 
   return (
     <group ref={ref} rotation={[0, POSE.baseRotY, 0]} scale={POSE.initialScale}>
-      <CarModel />
+      <CarModel onLoaded={onModelLoaded} />
     </group>
   );
 }
@@ -140,6 +140,7 @@ export default function HeroCar({
   progressRef,
   revealed = true,
   settleFraction = 0.45,
+  onModelLoaded,
 }) {
   const [dragging, setDragging] = useState(false);
   const [captured, setCaptured] = useState(null);
@@ -199,6 +200,7 @@ export default function HeroCar({
             spin={spin && !POSE_CAPTURE}
             settleFraction={settleFraction}
             dragging={dragging}
+            onModelLoaded={onModelLoaded}
           />
 
           <ContactShadows

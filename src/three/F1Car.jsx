@@ -13,11 +13,11 @@ import { carConfig } from "../lib/data";
  *   via <OrbitControls> in HeroCar.jsx.
  * - Falls back to procedural primitives if /models/f1-car/scene.gltf is missing.
  */
-export default function CarModel(props) {
+export default function CarModel({ onLoaded, ...props }) {
   return (
-    <ErrorBoundary fallback={<F1CarProcedural />}>
-      <Suspense fallback={<F1CarProcedural />}>
-        <CarGLB {...props} />
+    <ErrorBoundary fallback={<F1CarProcedural onLoaded={onLoaded} />}>
+      <Suspense fallback={<F1CarProcedural onLoaded={onLoaded} />}>
+        <CarGLB onLoaded={onLoaded} {...props} />
       </Suspense>
     </ErrorBoundary>
   );
@@ -25,9 +25,18 @@ export default function CarModel(props) {
 
 /* ---------------- GLB loader + auto-fit ---------------- */
 
-function CarGLB(props) {
+function CarGLB({ onLoaded, ...props }) {
   const { scene } = useGLTF(carConfig.modelPath);
   const clone = useMemo(() => scene.clone(true), [scene]);
+
+  // Signal that the GLB is ready (Suspense resolved = model downloaded + parsed).
+  const notified = useRef(false);
+  useEffect(() => {
+    if (!notified.current) {
+      notified.current = true;
+      onLoaded?.();
+    }
+  }, [onLoaded]);
 
   // Auto-fit + material tune (runs once when model loads).
   useEffect(() => {
@@ -81,6 +90,7 @@ function CarGLB(props) {
     </group>
   );
 }
+
 
 try {
   useGLTF.preload(carConfig.modelPath);
