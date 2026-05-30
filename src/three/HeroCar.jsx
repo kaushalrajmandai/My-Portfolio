@@ -240,6 +240,7 @@ export default function HeroCar({
           autoRotate={false}
           autoRotateSpeed={0.72}
           enableDamping={false}
+          touches={{ ONE: 0, TWO: 0 }}
           minPolarAngle={Math.PI * 0.16}
           maxPolarAngle={Math.PI * 0.52}
           target={START.target}
