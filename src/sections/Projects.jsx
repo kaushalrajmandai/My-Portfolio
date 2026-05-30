@@ -1,5 +1,4 @@
-import { Suspense, useEffect, useRef, useState } from "react";
-import { Canvas } from "@react-three/fiber";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   motion,
   useScroll,
@@ -8,7 +7,6 @@ import {
   useSpring,
 } from "framer-motion";
 import { projects } from "../lib/data";
-import CarModel from "../three/F1Car";
 import SectionHeader from "../components/SectionHeader";
 
 /**
@@ -22,7 +20,6 @@ export default function Projects() {
   const trackRef = useRef(null);
   const [range, setRange] = useState(0);
   const [inView, setInView] = useState(false);
-  const [facingRight, setFacingRight] = useState(true);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -37,8 +34,8 @@ export default function Projects() {
     Number.isFinite(v) ? v : 0
   );
 
-  // Measure how far the track must translate so the last card reaches the edge.
-  useEffect(() => {
+  // Measure synchronously before first paint so range is correct on mount.
+  useLayoutEffect(() => {
     const measure = () => {
       if (trackRef.current)
         setRange(Math.max(0, trackRef.current.scrollWidth - window.innerWidth));
@@ -54,29 +51,13 @@ export default function Projects() {
   }, []);
 
   const xRaw = useTransform(progress, [0, 1], [0, -range]);
-  const x = useSpring(xRaw, { stiffness: 90, damping: 22, mass: 0.4 });
+  const x = useSpring(xRaw, { stiffness: 120, damping: 28, mass: 0.3 });
 
-  // Scroll velocity → speed-streak intensity (transform/opacity only — no
-  // animated `filter`, which WAAPI handles unreliably).
   const velocity = useVelocity(progress);
-  const smoothVel = useSpring(velocity, { stiffness: 200, damping: 40 });
-  const streakOpacity = useTransform(smoothVel, [-1.5, 0, 1.5], [0.6, 0, 0.6], {
-    clamp: true,
-  });
-  const streakScaleX = useTransform(smoothVel, [-1.5, 0, 1.5], [1.4, 1, 1.4], {
-    clamp: true,
-  });
+  const streakOpacity = useTransform(velocity, [-1.5, 0, 1.5], [0.6, 0, 0.6], { clamp: true });
+  const streakScaleX = useTransform(velocity, [-1.5, 0, 1.5], [1.4, 1, 1.4], { clamp: true });
 
-  // Car faces against the scroll: left on the way down, right on the way up.
-  useEffect(() => {
-    const unsub = smoothVel.on("change", (v) => {
-      if (v > 0.0005) setFacingRight(false);
-      else if (v < -0.0005) setFacingRight(true);
-    });
-    return () => unsub();
-  }, [smoothVel]);
-
-  // Only run the little car's WebGL loop while the garage is on screen.
+  // Track section visibility for video play/pause control.
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
@@ -86,9 +67,6 @@ export default function Projects() {
     io.observe(el);
     return () => io.disconnect();
   }, []);
-
-  // Little F1 drives across the bottom as you scroll through the garage.
-  const carX = useTransform(progress, [0, 1], ["-14vw", "104vw"]);
 
   return (
     <section
@@ -105,6 +83,7 @@ export default function Projects() {
             number="04"
             eyebrow="The Garage"
             title="Featured Projects"
+            static
           />
         </div>
 
@@ -121,30 +100,11 @@ export default function Projects() {
               index={i}
               count={projects.length}
               progress={progress}
+              sectionInView={inView}
             />
           ))}
         </motion.div>
 
-        {/* The track — a single fine line the car runs along. Faded ends keep it
-            premium (no hard edges); appears/disappears with the car. */}
-        <motion.div
-          aria-hidden="true"
-          animate={{ opacity: inView ? 1 : 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="pointer-events-none absolute inset-x-0 bottom-[2.75rem] z-0"
-        >
-          <div className="h-px w-full bg-gradient-to-r from-transparent via-mercedes-silver-dark/40 to-transparent" />
-          <div className="h-4 w-full bg-gradient-to-b from-mercedes-silver-dark/[0.06] to-transparent blur-[2px]" />
-        </motion.div>
-
-        {/* Driving car (real W13 GLB) — with a soft contact shadow grounding it
-            on the track as it moves. */}
-        <motion.div style={{ x: carX }} className="absolute bottom-10 left-0 z-10">
-          <div className="relative">
-            <DrivingCar3D active={inView} facingRight={facingRight} />
-            <div className="pointer-events-none absolute bottom-[3px] left-1/2 h-[6px] w-28 -translate-x-1/2 rounded-[50%] bg-black/40 blur-md" />
-          </div>
-        </motion.div>
 
       </div>
     </section>
@@ -153,10 +113,24 @@ export default function Projects() {
 
 /* ---------------- One card ---------------- */
 
-function ProjectCardH({ project, index, count, progress }) {
-  // Card peaks (scales up) when scroll brings it to the viewport centre.
+function ProjectCardH({ project, index, count, progress, sectionInView }) {
+  const videoRef = useRef(null);
   const center = count > 1 ? index / (count - 1) : 0.5;
   const span = 0.5 / count;
+
+  // Play only when this card is the centered/active one.
+  useEffect(() => {
+    return progress.on("change", (p) => {
+      const v = videoRef.current;
+      if (!v) return;
+      const isActive = sectionInView && Math.abs(p - center) < span * 1.5;
+      if (isActive) {
+        v.play().catch(() => {});
+      } else {
+        v.pause();
+      }
+    });
+  }, [progress, center, span, sectionInView]);
   const scale = useTransform(
     progress,
     [center - span * 2, center, center + span * 2],
@@ -170,7 +144,7 @@ function ProjectCardH({ project, index, count, progress }) {
     { clamp: true }
   );
 
-  const img = ogImage(project.github);
+  const img = project.image || ogImage(project.github);
 
   return (
     <motion.article
@@ -186,7 +160,17 @@ function ProjectCardH({ project, index, count, progress }) {
           className="absolute inset-0 z-[1]"
         />
       )}
-      {img ? (
+      {project.video ? (
+        <video
+          ref={videoRef}
+          src={project.video}
+          muted
+          loop
+          playsInline
+          preload="none"
+          className="absolute inset-0 h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
+        />
+      ) : img ? (
         <img
           src={img}
           alt={project.name}
@@ -197,27 +181,27 @@ function ProjectCardH({ project, index, count, progress }) {
         <div className="absolute inset-0 bg-gradient-to-br from-petronas/25 via-mercedes-black to-mercedes-jet" />
       )}
 
-      {/* readability scrim */}
-      <div className="absolute inset-0 bg-gradient-to-t from-mercedes-jet via-mercedes-jet/55 to-transparent" />
+      {/* readability scrim — heavier at bottom so text is always legible */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/10" />
 
-      <span className="absolute top-2 right-4 font-numeric text-6xl leading-none text-petronas/25">
+      <span className="absolute top-2 right-4 font-numeric text-6xl leading-none text-white/20">
         0{index + 1}
       </span>
 
       <div className="absolute inset-x-0 bottom-0 p-5">
-        <h3 className="font-display font-black text-2xl text-mercedes-silver leading-tight">
+        <h3 className="font-display font-black text-2xl text-white leading-tight drop-shadow-sm">
           {project.name}
         </h3>
-        <p className="mt-1.5 max-w-[92%] text-xs leading-relaxed text-mercedes-silver-dark line-clamp-2">
+        <p className="mt-1.5 max-w-[92%] text-xs leading-relaxed text-white/60 line-clamp-2">
           {project.blurb}
         </p>
         <div className="mt-3 flex items-center justify-between gap-3">
-          <div className="flex flex-wrap gap-x-2 font-mono text-[9px] tracking-[0.15em] uppercase text-mercedes-silver-dark">
+          <div className="flex flex-wrap gap-x-2 font-mono text-[9px] tracking-[0.15em] uppercase text-white/45">
             {project.tech.slice(0, 4).map((t, i) => (
               <span key={t}>
                 {t}
                 {i < Math.min(project.tech.length, 4) - 1 && (
-                  <span className="text-mercedes-silver-dark/30 ml-2">·</span>
+                  <span className="text-white/25 ml-2">·</span>
                 )}
               </span>
             ))}
@@ -258,36 +242,6 @@ function SpeedStreaks({ opacity, scaleX }) {
         />
       ))}
     </motion.div>
-  );
-}
-
-/* ---------------- Driving F1 car (real W13 GLB) ---------------- */
-
-// Reuses the hero's W13 GLB (useGLTF caches by URL — no extra download) as a
-// tiny side-profile car driving across the garage. The outer group mirrors on
-// X to flip facing with scroll direction. SIZE = the wrapper's width/height.
-function DrivingCar3D({ active, facingRight }) {
-  return (
-    <div style={{ width: 150, height: 66 }}>
-      <Canvas
-        frameloop={active ? "always" : "never"}
-        dpr={[1, 1.5]}
-        gl={{ alpha: true, antialias: true }}
-        camera={{ position: [0, 0.25, 3.4], fov: 26 }}
-      >
-        <ambientLight intensity={0.85} />
-        <directionalLight position={[3, 6, 4]} intensity={2.2} />
-        <directionalLight position={[-4, 3, -3]} intensity={0.8} color="#26d6c5" />
-        <Suspense fallback={null}>
-          <group scale={[facingRight ? 1 : -1, 1, 1]}>
-            {/* rotate to a side profile; nudge by ±PI/2 if it shows front/rear */}
-            <group position={[0, -0.2, 0]} rotation={[0, Math.PI / 2, 0]}>
-              <CarModel />
-            </group>
-          </group>
-        </Suspense>
-      </Canvas>
-    </div>
   );
 }
 

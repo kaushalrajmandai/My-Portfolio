@@ -85,9 +85,10 @@ export default function GithubActivity() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
+          viewport={{ once: false, margin: "-80px" }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="relative overflow-hidden rounded-xl border border-mercedes-silver-dark/15 bg-mercedes-black/60 p-6 md:p-8"
+          onClick={() => window.open("https://github.com/kaushalrajmandai", "_blank", "noreferrer")}
+          className="relative overflow-hidden rounded-xl border border-mercedes-silver-dark/15 bg-mercedes-black/60 p-6 md:p-8 cursor-pointer"
         >
           <div className="mb-7 flex items-baseline justify-between gap-4">
             <span className="font-mono text-[10px] tracking-[0.35em] uppercase text-mercedes-silver-dark">
@@ -143,7 +144,7 @@ export default function GithubActivity() {
                           }}
                           initial={{ opacity: 0, scale: 0.4 }}
                           whileInView={{ opacity: 1, scale: 1 }}
-                          viewport={{ once: true }}
+                          viewport={{ once: false }}
                           transition={{
                             duration: 0.3,
                             delay: Math.min(wi * 0.012 + di * 0.004, 1.2),

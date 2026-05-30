@@ -33,7 +33,7 @@ export default function About() {
           variants={container}
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, margin: "-90px" }}
+          viewport={{ once: false, margin: "-90px" }}
         >
           <motion.div variants={left} className="flex items-center gap-4 mb-8">
             <motion.div

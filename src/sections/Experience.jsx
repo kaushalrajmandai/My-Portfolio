@@ -35,7 +35,7 @@ function Timeline({ title, items }) {
     <motion.div
       initial="hidden"
       whileInView="show"
-      viewport={{ once: true, margin: "-80px" }}
+      viewport={{ once: false, margin: "-80px" }}
       variants={{ hidden: {}, show: { transition: { staggerChildren: 0.12 } } }}
     >
       <h3 className="font-mono text-[11px] tracking-[0.3em] uppercase text-petronas mb-5">

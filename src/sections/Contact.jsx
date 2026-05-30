@@ -24,7 +24,7 @@ export default function Contact() {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
+          viewport={{ once: false, margin: "-80px" }}
           transition={{ duration: 0.5 }}
           className="font-mono text-[11px] tracking-[0.3em] uppercase text-petronas mb-3"
         >
@@ -33,7 +33,7 @@ export default function Contact() {
         <motion.p
           initial={{ opacity: 0, y: 24, filter: "blur(8px)" }}
           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          viewport={{ once: true, margin: "-80px" }}
+          viewport={{ once: false, margin: "-80px" }}
           transition={{ duration: 0.8, ease: EASE }}
           className="font-serif text-3xl md:text-4xl text-mercedes-silver leading-[1.18] mb-8"
         >
@@ -49,7 +49,7 @@ export default function Contact() {
           className="space-y-2 mb-8"
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, margin: "-60px" }}
+          viewport={{ once: false, margin: "-60px" }}
           variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}
         >
           <ContactRow
@@ -74,7 +74,7 @@ export default function Contact() {
           href={`mailto:${profile.email}`}
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          viewport={{ once: false }}
           transition={{ duration: 0.5, delay: 0.1 }}
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.97 }}

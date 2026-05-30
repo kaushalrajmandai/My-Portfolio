@@ -28,7 +28,7 @@ export default function Skills() {
               key={group}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-80px" }}
+              viewport={{ once: false, margin: "-80px" }}
               transition={{ duration: 0.6, ease: EASE, delay: gi * 0.08 }}
             >
               <h3 className="font-mono text-[11px] tracking-[0.3em] uppercase text-petronas mb-4">
@@ -52,7 +52,7 @@ function SkillBar({ skill, index }) {
     <motion.li
       initial={{ opacity: 0, x: -24 }}
       whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
+      viewport={{ once: false, margin: "-60px" }}
       transition={{ duration: 0.5, ease: EASE, delay: index * 0.06 }}
       className="group"
     >
@@ -69,7 +69,7 @@ function SkillBar({ skill, index }) {
           className="absolute inset-y-0 left-0 bg-petronas shadow-[0_0_8px_rgba(38,214,197,0.6)]"
           initial={{ width: 0 }}
           whileInView={{ width: `${skill.level}%` }}
-          viewport={{ once: true, margin: "-60px" }}
+          viewport={{ once: false, margin: "-60px" }}
           transition={{ duration: 1.1, ease: EASE, delay: 0.15 + index * 0.06 }}
         />
       </div>

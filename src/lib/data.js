@@ -108,7 +108,8 @@ export const projects = [
       "No-code platform where multiple AI models collaborate on a goal — task decomposition, sequential execution, human checkpoints, and a live pipeline dashboard.",
     tech: ["Next.js", "TypeScript", "Fastify", "FastAPI", "Postgres"],
     github: "https://github.com/kaushalrajmandai/Ai-Orchestrator",
-    live: "",
+    live: "https://github.com/kaushalrajmandai/Ai-Orchestrator",
+    video: import.meta.env.BASE_URL + "ai-orchestrator.mp4",
     featured: true,
   },
   {
@@ -118,6 +119,7 @@ export const projects = [
     tech: ["Three.js", "WebGL", "JavaScript", "GLSL"],
     github: "https://github.com/kaushalrajmandai/strive-fitness",
     live: "https://kaushalrajmandai.github.io/strive-fitness/",
+    video: import.meta.env.BASE_URL + "strive-fitness.mp4",
     featured: true,
   },
   {
@@ -126,7 +128,8 @@ export const projects = [
       "Responsive one-on-one tutoring portal with tutor listings, profile pages, an interactive booking calendar, and pricing plans.",
     tech: ["HTML5", "CSS3", "JavaScript"],
     github: "https://github.com/kaushalrajmandai/Tutorbridge-portal",
-    live: "",
+    live: "https://kaushalrajmandai.github.io/Tutorbridge-portal/",
+    video: import.meta.env.BASE_URL + "tutorbridge.mp4",
   },
   {
     name: "Bulk Certificate Email Sender",
@@ -134,7 +137,8 @@ export const projects = [
       "Zero-dependency Python script that sends personalised PDF certificates via Gmail SMTP. Used by the R&D Club to deliver 47 certificates in one click.",
     tech: ["Python", "SMTP", "Gmail"],
     github: "https://github.com/kaushalrajmandai/bulk-certificate-email-sender",
-    live: "",
+    live: "https://github.com/kaushalrajmandai/bulk-certificate-email-sender",
+    image: import.meta.env.BASE_URL + "bulk-certificate-bg.png",
   },
   {
     name: "Bill Splitter",
@@ -142,15 +146,17 @@ export const projects = [
       "React mini-app that splits bills and calculates tip per person in real time.",
     tech: ["React", "JavaScript"],
     github: "https://github.com/kaushalrajmandai/bill-splitter",
-    live: "",
+    live: "https://kaushalrajmandai.github.io/bill-splitter/",
+    image: import.meta.env.BASE_URL + "bill-splitter-bg.png",
   },
   {
     name: "F1 Portfolio (this site)",
     blurb:
       "Editorial-olive livery, race-start lights loader, and a fully interactive 3D W13 you can drag to spin. The site you're on right now.",
     tech: ["React", "Three.js", "GSAP", "Framer Motion", "Tailwind"],
-    github: "",
-    live: "",
+    github: "https://github.com/kaushalrajmandai/My-Portfolio",
+    live: "https://kaushalrajmandai.github.io/My-Portfolio/",
+    image: import.meta.env.BASE_URL + "f1-portfolio-bg.png",
   },
 ];
 
