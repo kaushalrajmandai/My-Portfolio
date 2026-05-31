@@ -16,7 +16,7 @@ import { carConfig } from "../lib/data";
 export default function CarModel({ onLoaded, ...props }) {
   return (
     <ErrorBoundary fallback={<F1CarProcedural onLoaded={onLoaded} />}>
-      <Suspense fallback={<F1CarProcedural onLoaded={onLoaded} />}>
+      <Suspense fallback={null}>
         <CarGLB onLoaded={onLoaded} {...props} />
       </Suspense>
     </ErrorBoundary>

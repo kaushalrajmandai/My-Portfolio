@@ -15,7 +15,7 @@ export default function App() {
 
   // Timeout fallback: show the site after 8s even if the model never signals.
   useEffect(() => {
-    const t = setTimeout(() => setModelReady(true), 8000);
+    const t = setTimeout(() => setModelReady(true), 12000);
     return () => clearTimeout(t);
   }, []);
 
