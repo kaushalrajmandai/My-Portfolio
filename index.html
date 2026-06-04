@@ -15,8 +15,67 @@
       rel="stylesheet"
     />
     <title>Kaushal Rajmandai · Portfolio</title>
+    <style>
+      #html-loader {
+        position: fixed; inset: 0; z-index: 9999;
+        background: #0e120c;
+        display: flex; align-items: center; justify-content: center;
+        flex-direction: column;
+      }
+      #html-loader svg { overflow: visible; }
+      @keyframes hl-spin {
+        to { transform: rotate(360deg); }
+      }
+      @keyframes hl-pulse {
+        0%,100% { opacity: .35; } 50% { opacity: .8; }
+      }
+      .hl-arc {
+        animation: hl-spin 1s linear infinite;
+        transform-origin: center;
+        transform-box: fill-box;
+      }
+      .hl-star {
+        animation: hl-pulse 1.8s ease-in-out infinite;
+        transform-origin: center;
+        transform-box: fill-box;
+      }
+      .hl-label {
+        margin-top: 32px;
+        font-family: monospace;
+        font-size: 10px;
+        letter-spacing: .5em;
+        text-transform: uppercase;
+        color: rgba(231,232,221,.55);
+        animation: hl-pulse 1.8s ease-in-out infinite;
+      }
+    </style>
   </head>
   <body>
+    <!-- Pure HTML/CSS loader — visible instantly before any JS parses. React removes it on mount. -->
+    <div id="html-loader" aria-label="Loading">
+      <svg width="156" height="156" viewBox="0 0 200 200">
+        <defs>
+          <linearGradient id="hl-chrome" x1="0" y1="0" x2=".35" y2="1">
+            <stop offset="0%"   stop-color="#f6f7f1"/>
+            <stop offset="45%"  stop-color="#d3d6c8"/>
+            <stop offset="72%"  stop-color="#9ba291"/>
+            <stop offset="100%" stop-color="#e2e4d8"/>
+          </linearGradient>
+        </defs>
+        <!-- spinning arc -->
+        <g class="hl-arc">
+          <circle cx="100" cy="100" r="93" fill="none" stroke="rgba(38,214,197,.12)" stroke-width="1.5"/>
+          <circle cx="100" cy="100" r="93" fill="none" stroke="#26D6C5" stroke-width="3.5"
+                  stroke-linecap="round" stroke-dasharray="175 600"/>
+        </g>
+        <!-- mercedes star -->
+        <g class="hl-star">
+          <circle cx="100" cy="100" r="66.5" fill="none" stroke="url(#hl-chrome)" stroke-width="6"/>
+          <path d="M100 39 L110.6 96 L154.5 133 L100 114 L45.5 133 L89.4 96 Z" fill="url(#hl-chrome)"/>
+        </g>
+      </svg>
+      <span class="hl-label">Loading</span>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
