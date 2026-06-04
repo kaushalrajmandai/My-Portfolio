@@ -47,7 +47,7 @@ const LAUNCH_TGT = new THREE.Vector3(...LAUNCH_CAM.target);
 // drive, flip the sign to reverse.
 const FWD_DIST = 6;
 
-const SPIN_DELAY_MS = 1200;
+const SPIN_DELAY_MS = 600;
 const r2 = (n) => Math.round(n * 100) / 100;
 const clamp01 = (x) => Math.min(1, Math.max(0, x));
 const smooth = (a, b, p) => {

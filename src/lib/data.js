@@ -110,6 +110,7 @@ export const projects = [
     github: "https://github.com/kaushalrajmandai/Ai-Orchestrator",
     live: "https://github.com/kaushalrajmandai/Ai-Orchestrator",
     video: import.meta.env.BASE_URL + "ai-orchestrator.mp4",
+    image: import.meta.env.BASE_URL + "ai-orchestrator-thumb.jpg",
     featured: true,
   },
   {
@@ -120,6 +121,7 @@ export const projects = [
     github: "https://github.com/kaushalrajmandai/strive-fitness",
     live: "https://kaushalrajmandai.github.io/strive-fitness/",
     video: import.meta.env.BASE_URL + "strive-fitness.mp4",
+    image: import.meta.env.BASE_URL + "strive-fitness-thumb.jpg",
     featured: true,
   },
   {
@@ -130,6 +132,7 @@ export const projects = [
     github: "https://github.com/kaushalrajmandai/Tutorbridge-portal",
     live: "https://kaushalrajmandai.github.io/Tutorbridge-portal/",
     video: import.meta.env.BASE_URL + "tutorbridge.mp4",
+    image: import.meta.env.BASE_URL + "tutorbridge-thumb.jpg",
   },
   {
     name: "Bulk Certificate Email Sender",
@@ -138,7 +141,7 @@ export const projects = [
     tech: ["Python", "SMTP", "Gmail"],
     github: "https://github.com/kaushalrajmandai/bulk-certificate-email-sender",
     live: "https://github.com/kaushalrajmandai/bulk-certificate-email-sender",
-    image: import.meta.env.BASE_URL + "bulk-certificate-bg.png",
+    image: import.meta.env.BASE_URL + "bulk-certificate-thumb.jpg",
   },
   {
     name: "Bill Splitter",
@@ -147,7 +150,7 @@ export const projects = [
     tech: ["React", "JavaScript"],
     github: "https://github.com/kaushalrajmandai/bill-splitter",
     live: "https://kaushalrajmandai.github.io/bill-splitter/",
-    image: import.meta.env.BASE_URL + "bill-splitter-bg.png",
+    image: import.meta.env.BASE_URL + "bill-splitter-thumb.jpg",
   },
   {
     name: "F1 Portfolio (this site)",
@@ -156,7 +159,7 @@ export const projects = [
     tech: ["React", "Three.js", "GSAP", "Framer Motion", "Tailwind"],
     github: "https://github.com/kaushalrajmandai/My-Portfolio",
     live: "https://kaushalrajmandai.github.io/My-Portfolio/",
-    image: import.meta.env.BASE_URL + "f1-portfolio-bg.png",
+    image: import.meta.env.BASE_URL + "f1-portfolio-thumb.jpg",
   },
 ];
 

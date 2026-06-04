@@ -48,12 +48,11 @@ export default function RaceStartLoader({ ready = false, onComplete }) {
         animate={{ opacity: 1, scale: exiting ? 1.12 : 1 }}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
       >
-        {/* teal arc sweeping — the continuous motion */}
-        <motion.svg
+        {/* teal arc sweeping — pure CSS spin avoids Framer Motion reset stutter */}
+        <svg
           viewBox="0 0 200 200"
           className="absolute inset-0 h-full w-full"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+          style={{ animation: "loader-spin 1s linear infinite", transformOrigin: "center" }}
           aria-hidden="true"
         >
           <circle cx="100" cy="100" r="93" fill="none" stroke="rgba(38,214,197,0.12)" strokeWidth="1.5" />
@@ -65,7 +64,7 @@ export default function RaceStartLoader({ ready = false, onComplete }) {
             strokeLinecap="round"
             strokeDasharray="175 600"
           />
-        </motion.svg>
+        </svg>
 
         {/* Mercedes star — upright emblem with a gentle breathing pulse */}
         <motion.svg

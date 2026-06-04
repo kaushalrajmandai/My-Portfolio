@@ -56,12 +56,9 @@ function SkillBar({ skill, index }) {
       transition={{ duration: 0.5, ease: EASE, delay: index * 0.06 }}
       className="group"
     >
-      <div className="flex justify-between items-baseline mb-1.5">
+      <div className="mb-1.5">
         <span className="font-display text-sm text-mercedes-silver transition-colors group-hover:text-petronas">
           {skill.name}
-        </span>
-        <span className="font-mono text-[10px] tracking-[0.2em] text-mercedes-silver-dark tabular-nums">
-          {skill.level}%
         </span>
       </div>
       <div className="relative h-[3px] bg-mercedes-silver-dark/15 rounded-sm overflow-hidden">

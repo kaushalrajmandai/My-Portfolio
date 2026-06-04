@@ -167,7 +167,8 @@ function ProjectCardH({ project, index, count, progress, sectionInView }) {
           muted
           loop
           playsInline
-          preload="none"
+          preload="metadata"
+          poster={project.image || undefined}
           className="absolute inset-0 h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
         />
       ) : img ? (
