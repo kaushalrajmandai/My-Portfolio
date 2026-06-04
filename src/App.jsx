@@ -1,13 +1,14 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import RaceStartLoader from "./components/RaceStartLoader";
 import Navbar from "./components/Navbar";
 import Home from "./sections/Home";
-import About from "./sections/About";
-import Skills from "./sections/Skills";
-import Experience from "./sections/Experience";
-import Projects from "./sections/Projects";
-import GithubActivity from "./sections/GithubActivity";
-import Contact from "./sections/Contact";
+
+const About        = lazy(() => import("./sections/About"));
+const Skills       = lazy(() => import("./sections/Skills"));
+const Experience   = lazy(() => import("./sections/Experience"));
+const Projects     = lazy(() => import("./sections/Projects"));
+const GithubActivity = lazy(() => import("./sections/GithubActivity"));
+const Contact      = lazy(() => import("./sections/Contact"));
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -41,12 +42,14 @@ export default function App() {
           <Navbar />
           <main>
             <Home revealed={!loading} onModelLoaded={handleModelLoaded} />
-            <About />
-            <Skills />
-            <Experience />
-            <Projects />
-            <GithubActivity />
-            <Contact />
+            <Suspense fallback={null}>
+              <About />
+              <Skills />
+              <Experience />
+              <Projects />
+              <GithubActivity />
+              <Contact />
+            </Suspense>
           </main>
         </div>
       </div>

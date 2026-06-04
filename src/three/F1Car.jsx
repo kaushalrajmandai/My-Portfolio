@@ -1,8 +1,9 @@
-import { Component, Suspense, useEffect, useMemo, useRef } from "react";
+import { Component, Suspense, useEffect, useMemo, useRef, lazy } from "react";
 import { useGLTF } from "@react-three/drei";
 import { Box3, Vector3 } from "three";
-import F1CarProcedural from "./F1CarProcedural";
 import { carConfig } from "../lib/data";
+
+const F1CarProcedural = lazy(() => import("./F1CarProcedural"));
 
 /**
  * Static, auto-fitting F1 car model for the interactive hero.
