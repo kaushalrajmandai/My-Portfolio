@@ -24,3 +24,6 @@ dist-ssr
 *.sw?
 *.png
 *.mp4
+
+# Original uncompressed F1 model — kept locally as a safety net; safe to delete.
+model-original-backup

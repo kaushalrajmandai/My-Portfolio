@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, lazy, Suspense } from "react";
+import { useProgress } from "@react-three/drei";
 import RaceStartLoader from "./components/RaceStartLoader";
 import Navbar from "./components/Navbar";
 import Home from "./sections/Home";
@@ -14,7 +15,12 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [modelReady, setModelReady] = useState(false);
 
-  // Timeout fallback: show the site after 8s even if the model never signals.
+  // Real download progress (0–100) from three's loading manager — counts the
+  // GLB geometry + every texture as they stream in. The loader eases a display
+  // value toward this so the percentage rises smoothly.
+  const { progress } = useProgress();
+
+  // Timeout fallback: show the site after 12s even if the model never signals.
   useEffect(() => {
     const t = setTimeout(() => setModelReady(true), 12000);
     return () => clearTimeout(t);
@@ -24,7 +30,13 @@ export default function App() {
 
   return (
     <>
-      {loading && <RaceStartLoader ready={modelReady} onComplete={() => setLoading(false)} />}
+      {loading && (
+        <RaceStartLoader
+          ready={modelReady}
+          progress={progress}
+          onComplete={() => setLoading(false)}
+        />
+      )}
 
       <div
         className={`transition-opacity duration-1000 ${

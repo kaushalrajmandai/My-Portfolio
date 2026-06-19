@@ -5,6 +5,10 @@ import { carConfig } from "../lib/data";
 
 const F1CarProcedural = lazy(() => import("./F1CarProcedural"));
 
+// Local Draco decoder (geometry is Draco-compressed → ~750KB instead of 4.4MB).
+// Self-hosted under /public/draco so there's no external CDN round-trip.
+const DRACO_PATH = import.meta.env.BASE_URL + "draco/";
+
 /**
  * Static, auto-fitting F1 car model for the interactive hero.
  *
@@ -27,7 +31,7 @@ export default function CarModel({ onLoaded, ...props }) {
 /* ---------------- GLB loader + auto-fit ---------------- */
 
 function CarGLB({ onLoaded, ...props }) {
-  const { scene } = useGLTF(carConfig.modelPath);
+  const { scene } = useGLTF(carConfig.modelPath, DRACO_PATH);
   const clone = useMemo(() => scene.clone(true), [scene]);
 
   // Signal that the GLB is ready (Suspense resolved = model downloaded + parsed).
@@ -73,6 +77,15 @@ function CarGLB({ onLoaded, ...props }) {
     });
 
     // Bbox-fit: center on X/Z, sit on Y=0, scale longest dim to targetSize.
+    // Reset any prior fit transform FIRST so this is idempotent. React
+    // StrictMode (and HMR) can run this effect more than once, and
+    // setScalar()/position assignment OVERWRITE rather than accumulate — so
+    // without this reset a second pass would re-measure the already-fitted car,
+    // compute a scale of ~1, and blow the model up to its raw ~170× size.
+    clone.scale.setScalar(1);
+    clone.position.set(0, 0, 0);
+    clone.updateMatrixWorld(true);
+
     const box = new Box3().setFromObject(clone);
     const size = box.getSize(new Vector3());
     const center = box.getCenter(new Vector3());
@@ -94,7 +107,7 @@ function CarGLB({ onLoaded, ...props }) {
 
 
 try {
-  useGLTF.preload(carConfig.modelPath);
+  useGLTF.preload(carConfig.modelPath, DRACO_PATH);
 } catch {
   /* Suspense fallback handles failure */
 }
